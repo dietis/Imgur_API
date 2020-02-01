@@ -1,33 +1,45 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Button,
-  View,
-  SafeAreaView,
   Text,
-  Alert,
+  View,
+  TextInput,
+  Button,
+  TouchableHighlight,
+  SafeAreaView,
+  Image,
+  Alert
 } from 'react-native';
 
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+    state = {
+      email   : '',
+      password: '',
+    }
+  }
     static navigationOptions = {
-      title: 'Welcome',
+      title: 'Homescreen',
     };
     render() {
+      //this.props.navigation.navigate('Profile')
       const {navigate} = this.props.navigation;
       return (
         <>
     <SafeAreaView style={styles.container}>
-        <View>
-        <Text style={styles.title}>
-          The title and onPress handler are required. It is recommended to set
-          accessibilityLabel to help make your app usable by everyone.
-        </Text>
-        <Button
-          title="Press me"
-          onPress={() => Alert.alert('Simple Button pressed')}
-        />
-      </View>
       <Separator />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text></Text>
+        <Button
+          title="Go to Your Profile"
+          onPress={() => this.props.navigation.navigate('Profile')}
+        />
+        <Button
+          title="Login "
+          onPress={() => this.props.navigation.navigate('Logged')}
+        />
+        </View>
       </SafeAreaView>
       </>
       );

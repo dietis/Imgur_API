@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {  StyleSheet,  Button,  View,  SafeAreaView,  Text,  Alert } from 'react-native';
 
 class UserScreen extends React.Component {
     static navigationOptions = {
@@ -8,7 +9,7 @@ class UserScreen extends React.Component {
       const {navigate} = this.props.navigation;
       return (
         <Button
-          title="Go to Jane's profile"
+          title="You are in your profile"
           onPress={() => navigate('Profile', {name: 'Jane'})}
         />
       );
