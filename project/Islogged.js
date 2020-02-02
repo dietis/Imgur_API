@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   StyleSheet,
   Button,
@@ -28,20 +28,30 @@ class Loggin extends React.Component {
         if (viewId == "login") {
             Alert.alert("Mail = " + this.state.email);
             Alert.alert("Password = " + this.state.password);
-        }
+              const navigateAction = this.props.navigation.navigate({
+        routeName: 'Profile',
+        params: { usermail: this.state.email }
+      })
+      //this.props.navigation.dispatch(navigateAction);
+      this.props.navigation.navigate('Screen2',{usermail: this.state.email});
+          }
         else 
         Alert.alert("Alert", "Button pressed "+viewId);
       }
 
       handleChangemail = (event = {}) => { //ici je vais enregistrer les modifs du field mail input pour le login
-        const mail = event.target && event.target.mail;
-        const value = event.target && event.target.value;
-        
-        this.setState({ email : value});
+        //const mail = event.target && event.target.mail;
+        //const value = event.target && event.target.value;
+        //Alert.alert({value});
+        //this.setState({ email : mail});
     }
-
+    ComponentWillMount = () => {
+      this.setState({ email: '' });
+      this.setState({ password: '' });
+   }
 
     render() {
+      //this.props.navigation.navigate('Protected','Profile')
       const {navigate} = this.props.navigation;
       return (
         <>
@@ -53,7 +63,10 @@ class Loggin extends React.Component {
               placeholder="Email"
               keyboardType="email-address"
               underlineColorAndroid='transparent'
-              onChangeText={(email) => this.setState({email})}/>
+              //onChangeText={(email) => this.setState({ email })}
+              onChangeText={(email) => this.setState({email})}
+              //onChange={handleChangemail} 
+              />
         </View>
         
         <View style={styles.inputContainer}>
@@ -65,11 +78,13 @@ class Loggin extends React.Component {
               onChangeText={(password) => this.setState({password})}/>
         </View>
 
-        <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener('login')}>
+        <Button style={styles.loginButton} onPress={() => this.onClickListener('login')}
+          title="Login"
+        >
         <View>
           <Text style={styles.loginText}>Login  <Image style={styles.inputIcon} source={{uri: 'https://img.icons8.com/ultraviolet/40/000000/enter-2.png'}}/>{"\n"}</Text>
         </View>
-        </TouchableHighlight>
+        </Button>
         <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
             <Text>Forgot your password?</Text>
         </TouchableHighlight>
@@ -144,7 +159,14 @@ const styles = StyleSheet.create({
       borderRadius:30,
     },
     loginButton: {
-      backgroundColor: "#00b5ec",
+      backgroundColor: 'rgb(0,181,236)',
+      height:45,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom:20,
+      width:250,
+      borderRadius:30,
     },
     loginText: {
       color: 'white',
