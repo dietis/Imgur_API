@@ -11,6 +11,7 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Loggin extends React.Component {
     static navigationOptions = {
@@ -21,35 +22,43 @@ class Loggin extends React.Component {
         state = {
           email   : '',
           password: '',
+          token: '',
+          islogged: false,
         }
       }
 
-      onClickListener = (viewId) => {
+      onClickListener = (viewId) => { 
         if (viewId == "login") {
-            Alert.alert("Mail = " + this.state.email);
-            Alert.alert("Password = " + this.state.password);
+            //Alert.alert("Mail = " + this.state.email);
+            //Alert.alert("Password = " + this.state.password);
               const navigateAction = this.props.navigation.navigate({
         routeName: 'Profile',
         params: { usermail: this.state.email }
-      })
+      });
       //this.props.navigation.dispatch(navigateAction);
-      this.props.navigation.navigate('Screen2',{usermail: this.state.email});
-          }
-        else 
-        Alert.alert("Alert", "Button pressed "+viewId);
-      }
+      /*var formdataauth = new FormData();
+      formdataauth.append("response_type", "308635ba784b8b416168464c6ac2136928330a06");
+      formdataauth.append("client_id", "aafe330f0f405b4")
+      var requestOptions1 = {
+        method: 'POST',
+        body: formdataauth,
+        redirect: 'follow'
+    };
+      fetch("https://api.imgur.com/oauth2/authorize", requestOptions1)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));*/
 
+        }
+        else
+          Alert.alert("Alert", "Button pressed "+viewId);
+      }
       handleChangemail = (event = {}) => { //ici je vais enregistrer les modifs du field mail input pour le login
         //const mail = event.target && event.target.mail;
         //const value = event.target && event.target.value;
         //Alert.alert({value});
         //this.setState({ email : mail});
     }
-    ComponentWillMount = () => {
-      this.setState({ email: '' });
-      this.setState({ password: '' });
-   }
-
     render() {
       //this.props.navigation.navigate('Protected','Profile')
       const {navigate} = this.props.navigation;
