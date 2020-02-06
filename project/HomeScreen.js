@@ -23,23 +23,25 @@ class HomeScreen extends Component {
         islogged : false,
         error : false,
         refresh_token : '',
+        json_data : '',
+        disconnect: false,
       }
     }
 
-    ComponentWillMount = () => {
-      const islog = this.props.navigation.getParam('islogged');
-      const usermal = this.props.navigation.getParam('usermail');
-      if (islog && usermal) {
-        this.setState({ email: usermal });
-        this.setState({ islogged: islog});
-      }
-   }
+   componentDidMount() {
+    const { navigation } = this.props;
+    this.setState({ islogged: this.props.navigation.getParam('islogged')});
+    this.setState({ json_data: this.props.navigation.getParam('json_data')});
+    this.setState({ disconnect: this.props.navigation.getParam('disconnect')});
+    this.focusListener = navigation.addListener('didFocus', () => {
+      this.setState({ islogged: false });
+    });
+    //this.props.navigation.state.params
+  }
+
 
      onClickListener = (viewId) => { 
       if (viewId == "login") {
-          //Alert.alert("Mail = " + this.state.email);
-          //Alert.alert("Password = " + this.state.password);
-        //const navigateAction = this.props.navigation.navigate({routeName: 'Profile', params: { usermail: this.state.email }});
         var formdata = new FormData();
         formdata.append("refresh_token", "70f36f1cf24197f436af391a58f27eacd1792249");
         formdata.append("client_id", "80f2eef039cf016");
@@ -53,17 +55,41 @@ class HomeScreen extends Component {
         var errorit;
       fetch("https://api.imgur.com/oauth2/token", requestOptions)
         .then(response => response.text())
-        .then(result => {console.log(result.substring(10, 15)); if (result.substring(10, 15) == "error") { this.setState({error:true});}else {this.setState({islogged:true})} })
+        .then(result => {console.log(result); if (result.substring(10, 15) == "error") { this.setState({error:true});}else {this.setState({islogged:true, json_data:JSON.parse(result)})} })
         .catch(error => { console.log('error', error)});
         if (this.state.error === true)
           Alert.alert("Bad creditentiel");
-        console.log("first " + this.state.logged);
-        this.props.navigation.navigate('Profile', {email: this.state.email, islogged: this.state.logged, token: this.state.token});
+          Alert.alert("z " + this.state.islogged);
+        if (this.state.islogged === true) {
+          this.props.navigation.navigate('Profile', {email: this.state.email, islogged: this.state.logged, token: this.state.token});
+        /*var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Client-ID 80f2eef039cf016");
+        var formdata = new FormData();
+        var requestOptions = {
+          method: 'GET',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+        fetch("https://api.imgur.com/3/account/{{username}}", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+        */
+      }
+        //recup des infos du compte
+        /*function Car(make, model, year) {
+          this.make = make;
+          this.model = model;
+          this.year = year;
+        }
+        var car1 = new Car('Eagle', 'Talon TSi', 1993);*/ // example de création d'objet ~
       }
       if (viewId == "profile") {
-        this.props.navigation.navigate('Profile', {email: this.state.email, islogged: this.state.logged, token: this.state.token});
+        this.props.navigation.navigate('Profile', {json_data: this.state.json_data, islogged: this.state.islogged});
       }
     }
+    
 
     render() {
       //this.props.navigation.navigate('Profile')
@@ -88,12 +114,17 @@ class HomeScreen extends Component {
           /> 
           </View>
         </SafeAreaView>;
-      if (this.state.islogged) {
-        Alert.alert("Logged as " + this.props.email);
+      if (this.state.islogged === true ) {
+        //Alert.alert(JSON.stringify(this.state.json_data));
+        console.log("logged check json = " + JSON.stringify(this.state.json_data));
+        //alert(this.state.json_data['account_username']); //récupère le pseudo ici
+        //Alert.alert("Logged as " + this.props.email);
       }
+      console.log("there " + this.state.islogged);
+
       return (
       <>
-        { this.state.islogged ? logged : notlogged }
+        { this.state.islogged == true ? logged : notlogged }
       </>
       );
     }

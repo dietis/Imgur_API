@@ -10,30 +10,26 @@ class UserScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          email   : '',
           islogged : false,
-          token : '',
+          json_data : '',
         }
       }
 
-     render() {
-      const {navigate} = this.props.navigation;
-      const islog = this.props.navigation.getParam('islogged');
-      const usermal = this.props.navigation.getParam('usermail');
-      const token = this.props.navigation.getParam('token');
-
-      if (islog != false && usermal) {
-        () => this.setState({ email: usermal });
-        () => this.setState({ islogged: islog });
-        Alert.alert("gg " + usermal + " " + islog + " token  ==  " + token);
+      componentDidMount(){
+        this.setState({ islogged: this.props.navigation.state.params.islogged});
+        this.setState({ json_data: this.props.navigation.getParam('json_data')});
+        //this.props.navigation.state.params
+        //this.props.navigation.state.params
       }
 
-      const logged = <SafeAreaView style={styles.container}>
+      render() {
+        //Alert.alert('a ' + this.state.json_data['account_username']);
+        const logged = <SafeAreaView style={styles.container}>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text></Text>
           <Button
-            title="Go to Your Profile"
-            onPress={() => this.props.navigation.navigate('Profile')}
+            title="Disconnect ?"
+            onPress={() => this.props.navigation.navigate('Home', {islogged: false, disconnect: true})}
           /> 
           </View>
         </SafeAreaView>;
@@ -41,7 +37,6 @@ class UserScreen extends React.Component {
           <>
         <Button
           title="You are in your profile"
-          onPress={() => navigate('Profile', {name: 'Jane'})}
         />
       { this.state.islogged ? logged : null }
       </>
