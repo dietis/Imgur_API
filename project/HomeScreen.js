@@ -8,8 +8,11 @@ import {
   TouchableHighlight,
   SafeAreaView,
   Image,
-  Alert
+  Alert,
+  Linking,
 } from 'react-native';
+import { WebView } from 'react-native-webview';
+import CookieManager from '@react-native-community/cookies';
 
 class HomeScreen extends Component {
     static navigationOptions = {
@@ -25,10 +28,12 @@ class HomeScreen extends Component {
         refresh_token : '',
         json_data : '',
         disconnect: false,
+        redirect: false,
+        redirect_json_data : '',
       }
     }
 
-   componentDidMount() {
+  componentDidMount() {
     const { navigation } = this.props;
     this.setState({ islogged: this.props.navigation.getParam('islogged')});
     this.setState({ json_data: this.props.navigation.getParam('json_data')});
@@ -39,10 +44,33 @@ class HomeScreen extends Component {
     //this.props.navigation.state.params
   }
 
+  _onNavigationStateChange = (event) => {
+    console.log(event.url);
+    CookieManager.clearAll();
+  };
 
      onClickListener = (viewId) => { 
       if (viewId == "login") {
-        var formdata = new FormData();
+        var testdata = new FormData();
+        testdata.append("response_type", "code");
+        testdata.append("client_id", "ae785bebe045504");
+        //ae785bebe045504 client id 
+        //92756f4dafa6a689b0125f2f16b793973a68d40a secret client
+        var requestOptions = {
+          method: 'POST',
+          //body: testdata,
+          redirect: 'follow'
+        };
+        //https://api.imgur.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&response_type=token.
+        //Linking.openURL("https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token");
+        const url = "https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token";
+        this.setState({redirect: true});
+        fetch("https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token", requestOptions)
+        .then(response => response.text())
+        .then(result => {console.log(result)})
+        .catch(error => { console.log('error', error)});
+
+        /*var formdata = new FormData();
         formdata.append("refresh_token", "70f36f1cf24197f436af391a58f27eacd1792249");
         formdata.append("client_id", "80f2eef039cf016");
         formdata.append("client_secret", "9b6d23aca6f45266abede590efc5337b02a01da1");
@@ -52,8 +80,8 @@ class HomeScreen extends Component {
           body: formdata,
           redirect: 'follow'
         };
-        var errorit;
-      fetch("https://api.imgur.com/oauth2/token", requestOptions)
+        var errorit;*/
+      /*fetch("https://api.imgur.com/oauth2/token", requestOptions)
         .then(response => response.text())
         .then(result => {console.log(result); if (result.substring(10, 15) == "error") { this.setState({error:true});}else {this.setState({islogged:true, json_data:JSON.parse(result)})} })
         .catch(error => { console.log('error', error)});
@@ -76,7 +104,7 @@ class HomeScreen extends Component {
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
         */
-      }
+      //}
         //recup des infos du compte
         /*function Car(make, model, year) {
           this.make = make;
@@ -121,10 +149,15 @@ class HomeScreen extends Component {
         //Alert.alert("Logged as " + this.props.email);
       }
       console.log("there " + this.state.islogged);
+      const redirect_div = <WebView source={{uri: "https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token"}}
+      onNavigationStateChange={this._onNavigationStateChange}
+      style={{marginTop: 20}} 
+      />;
 
       return (
       <>
-        { this.state.islogged == true ? logged : notlogged }
+      <Text> debug </Text>
+        { this.state.redirect == true ? redirect_div : (this.state.islogged == true ? logged : notlogged) } 
       </>
       );
     }

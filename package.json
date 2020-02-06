@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/cli-platform-android": "^3.0.3",
+    "@react-native-community/cookies": "^2.0.3",
     "@react-native-community/masked-view": "^0.1.6",
     "@unimodules/core": "^5.0.0",
     "expo-constants": "^8.0.0",
@@ -22,6 +23,7 @@
     "react-native-safe-area-context": "^0.6.4",
     "react-native-screens": "^2.0.0-alpha.32",
     "react-native-unimodules": "^0.7.0",
+    "react-native-webview": "^8.0.6",
     "react-navigation": "^4.1.0",
     "react-navigation-stack": "^2.0.16"
   },
