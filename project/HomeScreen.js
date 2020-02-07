@@ -45,17 +45,31 @@ class HomeScreen extends Component {
   }
 
   _onNavigationStateChange = (event) => {
-    console.log(event.url);
-    CookieManager.clearAll();
+    console.log("url = " + event.url);
+    console.log("there " + JSON.stringify(event));
+    var regex = /[?&]([^=#]+)=([^&#]*)/g,
+      params = {},
+      match;
+    while (match = regex.exec(event.url)) {
+      params[match[1]] = match[2];
+    }
+    console.log("param = " + JSON.stringify(params));
+    if (params['token_type'] == "bearer" && params['refresh_token']) {
+      CookieManager.clearAll();
+      this.setState({redirect: false});
+      this.setState({islogged: true});
+      this.setState({redirect_json_data: params});
+    }
+    alert(params['token_type']);
   };
 
-     onClickListener = (viewId) => { 
+    onClickListener = (viewId) => {
       if (viewId == "login") {
         var testdata = new FormData();
         testdata.append("response_type", "code");
         testdata.append("client_id", "ae785bebe045504");
-        //ae785bebe045504 client id 
-        //92756f4dafa6a689b0125f2f16b793973a68d40a secret client
+        //be8f8a010e925e2 client id 
+        //e454e32d2acccc394d9bfda2cf0fa558fcf1acb3 secret client
         var requestOptions = {
           method: 'POST',
           //body: testdata,
@@ -65,10 +79,7 @@ class HomeScreen extends Component {
         //Linking.openURL("https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token");
         const url = "https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token";
         this.setState({redirect: true});
-        fetch("https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token", requestOptions)
-        .then(response => response.text())
-        .then(result => {console.log(result)})
-        .catch(error => { console.log('error', error)});
+        this.setState({islogged: false});
 
         /*var formdata = new FormData();
         formdata.append("refresh_token", "70f36f1cf24197f436af391a58f27eacd1792249");
@@ -114,7 +125,8 @@ class HomeScreen extends Component {
         var car1 = new Car('Eagle', 'Talon TSi', 1993);*/ // example de création d'objet ~
       }
       if (viewId == "profile") {
-        this.props.navigation.navigate('Profile', {json_data: this.state.json_data, islogged: this.state.islogged});
+        //alert("profile var => " + JSON.stringify(this.state.redirect_json_data));
+        this.props.navigation.navigate('Profile', {json_data: this.state.redirect_json_data, islogged: this.state.islogged});
       }
     }
     
@@ -148,8 +160,7 @@ class HomeScreen extends Component {
         //alert(this.state.json_data['account_username']); //récupère le pseudo ici
         //Alert.alert("Logged as " + this.props.email);
       }
-      console.log("there " + this.state.islogged);
-      const redirect_div = <WebView source={{uri: "https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token"}}
+      const redirect_div = <WebView source={{uri: "https://api.imgur.com/oauth2/authorize?client_id="+ 'be8f8a010e925e2' +"&response_type=token"}}
       onNavigationStateChange={this._onNavigationStateChange}
       style={{marginTop: 20}} 
       />;

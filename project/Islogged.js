@@ -48,7 +48,6 @@ class Loggin extends React.Component {
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));*/
-
         }
         else
           Alert.alert("Alert", "Button pressed "+viewId);
