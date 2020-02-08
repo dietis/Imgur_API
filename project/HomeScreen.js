@@ -60,7 +60,7 @@ class HomeScreen extends Component {
       this.setState({islogged: true});
       this.setState({redirect_json_data: params});
     }
-    alert(params['token_type']);
+    console.log(params['token_type']);
   };
 
     onClickListener = (viewId) => {

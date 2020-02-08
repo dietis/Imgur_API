@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {  StyleSheet,  Button,  View,  SafeAreaView,  Text,  Alert } from 'react-native';
+import {  StyleSheet,  View,  SafeAreaView,  Text,  Alert, Image, ScrollView } from 'react-native';
+import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage';
 
 class UserScreen extends React.Component {
@@ -11,21 +12,21 @@ class UserScreen extends React.Component {
         super(props);
         this.state = {
           islogged : false,
-          json_data : '',
-          access_token : '',
+          json_data : [],
+          access_token : [],
+          img_data : [],
+          is_img_data : false,
         }
       }
 
       componentDidMount() {
-        const stock = this.props.navigation.getParam('json_data');
-        this.setState({ islogged: this.props.navigation.state.params.islogged});
-        this.setState({ json_data: this.props.navigation.getParam('json_data')});
+        this.setState({ islogged: this.props.navigation.state.params.islogged, is_access_token: true, json_data: this.props.navigation.getParam('json_data') });
         //this.props.navigation.state.params
         //this.props.navigation.state.params
-        console.log("dmu " + JSON.stringify(stock['refresh_token']));
-        var access_token = "";
+        console.log("rftken " + this.props.navigation.getParam('json_data')['refresh_token']);
+
         var formdata = new FormData();
-        formdata.append("refresh_token", stock['refresh_token']);
+        formdata.append("refresh_token", this.props.navigation.getParam('json_data')['refresh_token']);
         formdata.append("client_id", "be8f8a010e925e2");
         formdata.append("client_secret", "e454e32d2acccc394d9bfda2cf0fa558fcf1acb3");
         formdata.append("grant_type", "refresh_token");
@@ -34,29 +35,85 @@ class UserScreen extends React.Component {
           body: formdata,
           redirect: 'follow'
         };
+ 
+        //Access token
         fetch("https://api.imgur.com/oauth2/token", requestOptions)
-          .then(response => response.text())
-          .then(result => {console.log(result + "acc result" + this.props.access_token); this.setState({access_token: result});})
-          .catch(error => console.log('error', error));
-          console.log("access === " + this.state.access_token)
-      }
-
+          .then(res => res.json())
+          .then(
+            (result) => {//Alert.alert("good val " + JSON.stringify(result));
+              this.setState({
+                is_access_token: true,
+                access_token: result.access_token
+              });
+                        //get images
+          var myHeaders = new Headers();
+          //Alert.alert(JSON.stringify("there " + this.state.access_token['access_token']));
+          myHeaders.append("Authorization", "Bearer " + this.state.access_token);
+          var requestOptions = {
+              method: 'GET',
+              headers: myHeaders,
+              redirect: 'follow'
+          };
+          fetch("https://api.imgur.com/3/account/me/images", requestOptions)
+          .then(res => res.json())
+          .then(
+            (result) => {console.log("good val " + JSON.stringify(result['data']));
+              this.setState({
+                is_img_data: true,
+                img_data: result.data
+              });
+            },
+            // Remarque : il est important de traiter les erreurs ici
+            // au lieu d'utiliser un bloc catch(), pour ne pas passer à la trappe
+            // des exceptions provenant de réels bugs du composant.
+            (error) => {
+              this.setState({
+                is_img_data: false,
+                error
+              });console.log("error get image " , error);
+            }
+          )
+            },
+            // Remarque : il est important de traiter les erreurs ici
+            // au lieu d'utiliser un bloc catch(), pour ne pas passer à la trappe
+            // des exceptions provenant de réels bugs du composant.
+            (error) => {
+              this.setState({
+                is_access_token: false,
+                error
+              });console.log("error get acctoken " , error);
+            }
+          );
+          //this.setState({ islogged: true });
+        }
 
       render() {
-        var myHeaders = new Headers();
-        myHeaders.append("Authorization", "Bearer " + this.state.access_token['access_token']);
-        var requestOptions = {
-          method: 'GET',
-          headers: myHeaders,
-          redirect: 'follow'
-        };
-        fetch("https://api.imgur.com/3/account/me/images", requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));        
-
-        //Alert.alert('a ' + JSON.stringify(this.state));
-        const logged = <SafeAreaView style={styles.container}>
+        const { error, is_access_token, access_token, json_data, img_data } = this.state;
+        if ({json_data} != [] && this.state.is_img_data == true) {
+          //console.log('rftk rend_ ' + JSON.stringify({json_data}['json_data']['refresh_token']) + ' acce_token = ' + JSON.stringify({ access_token }));
+        }
+        const logged =<>
+  <ScrollView contentContainerStyle={styles.contentContainer}>
+      {img_data.map(item => (
+        <>
+            <Card title='HELLO WORLD' key={item.id}
+              image={{uri: item.link}}
+              imageStyle={{
+              }}>
+             <Text style={{marginBottom: 10}}>
+             { item.description }
+           </Text>
+           <Button key={item.id}
+             icon={<Icon raised
+              name='eject'
+              type='font-awesome'
+              color='#f50' 
+              key={item.id} />}
+             buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+             title='VIEW NOW' />
+             </Card>
+      </>
+    ))}
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text></Text>
           <Button
@@ -64,7 +121,8 @@ class UserScreen extends React.Component {
             onPress={() => this.props.navigation.navigate('Home', {islogged: false, disconnect: true})}
           /> 
           </View>
-        </SafeAreaView>;
+          </ScrollView>
+          </>;
       return (
           <>
         <Button
@@ -77,6 +135,9 @@ class UserScreen extends React.Component {
   }
 
   const styles = StyleSheet.create({
+    contentContainer: {
+      paddingVertical: 20
+    },  
     container: {
       flex: 1,
       marginTop: 2,
