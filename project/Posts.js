@@ -34,6 +34,7 @@ class Post extends Component {
 
   componentDidMount() {
     this.setState({ post_id: this.props.navigation.getParam('post_id'), all_post: this.props.navigation.getParam('all_post')});
+
   }
 
   

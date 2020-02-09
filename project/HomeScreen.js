@@ -87,11 +87,8 @@ class HomeScreen extends Component {
         this.props.navigation.navigate('Profile', {json_data: this.state.redirect_json_data, islogged: this.state.islogged});
       }
     }
-    
 
-    render() {
-
-	
+    render() {	
       //this.props.navigation.navigate('Profile')
       const {navigate} = this.props.navigation;
       const notlogged = <SafeAreaView style={styles.container}>
@@ -129,10 +126,8 @@ class HomeScreen extends Component {
       onNavigationStateChange={this._onNavigationStateChange}
       style={{marginTop: 20}} 
       />;
-
 	    return (
 		    <>
-		
 	      <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center' }} >
 		    <Image style={{ width: 150, height: 100, marginTop: -180, marginLeft: -80 }} source = {require('./img/logo_epicture.png')} />
 	      <Text>  </Text>

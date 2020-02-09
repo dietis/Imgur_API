@@ -96,6 +96,8 @@ class Site_Post extends Component {
           .catch(error => console.log('error', error));
           this.setState({ firstload : false });
         }
+        Alert.alert(JSON.stringify(this.state.array_img[0]));
+        console.log("Check \n" , JSON.stringify(this.state.array_img[1]));
       return (
       <>
       <Fragment>
@@ -104,16 +106,28 @@ class Site_Post extends Component {
           <View style={styles.body}>
         <RadioGroup radioButtons={this.state.data} onPress={this.onPress} style={{display: 'flex', width:'auto', marginHorizontal: -32}}/>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-      {this.state.array_img.map(item => (
+        {this.state.array_img.map(item => (
         <>
-            <Card title={item.name} key={item.id}
-              image={{url: item.link}}
-              imageStyle={{ height : 40
-              }}>
-             <Text style={{marginBottom: 10}}>
-             { item.description }
-           </Text>
-           <Button key={item.id}
+         <Card style={{ flex: 1 }}>
+         <CardItem>
+           <Left>
+             <Thumbnail source={item.link} />
+             <Body>
+               <Text>{item.title}</Text>
+               <Text note>{item.datetime}</Text>
+             </Body>
+           </Left>
+         </CardItem>
+         <CardItem>
+           <Body>
+             <AutoHeightImage
+               width={Dimensions.get('window').width - 35}
+               source={{ uri: item.link }}
+             />
+             <Text style={{ marginTop: 10 }}>{ item.description }</Text>
+           </Body>
+         </CardItem>
+         <Button key={item.id}
             icon={<Icon raised
             name='eject'
             type='font-awesome'
@@ -122,9 +136,9 @@ class Site_Post extends Component {
             buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}} 
             onPress={() => this.props.navigation.navigate('Post_page', {post_id : item.id, all_post: this.state.array_img})}
             title='VIEW NOW' />
-             </Card>
-      </>
-      ))}
+       </Card>
+      </> 
+    ))}
           </ScrollView>
           </View>
         </SafeAreaView>
