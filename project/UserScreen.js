@@ -140,8 +140,8 @@ class UserScreen extends React.Component {
           <Button
             title="Create a Post ;)"
             buttonStyle={{marginTop:20}}
-            onPress={() => this.props.navigation.navigate('create_post', {islogged: false, disconnect: true})}
-          /> 
+            onPress={() => this.props.navigation.navigate('Create_post', {json_data : this.state.json_data, access_token: this.state.access_token } )}
+          />
           </ScrollView>
           </>;
       return (
