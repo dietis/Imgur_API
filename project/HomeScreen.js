@@ -136,9 +136,10 @@ class HomeScreen extends Component {
       const {navigate} = this.props.navigation;
       const notlogged = <SafeAreaView style={styles.container}>
       <Separator />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+	    <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center', marginLeft: -40, marginTop: -200 }}>
         <Text></Text>
-        <Button
+            <Button
+	color='#ABBCF5'
           title="Login "
           onPress={() => this.onClickListener('login')}
         />
@@ -146,9 +147,10 @@ class HomeScreen extends Component {
       </SafeAreaView>;
       const logged = <SafeAreaView style={styles.container}>
         <Separator />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center', marginLeft: -40, marginTop: -200 }}>
           <Text></Text>
-          <Button
+            <Button
+	color='#ABBCF5'
             title="Go to Your Profile"
             onPress={() => this.onClickListener('profile')}
           /> 
@@ -166,8 +168,11 @@ class HomeScreen extends Component {
       />;
 
       return (
-      <>
-      <Text> debug </Text>
+	      <>
+	      <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+	      <Image style={{ width: 150, height: 100, marginTop: -180, marginLeft: -150 }} source = {require('./img/logo_epicture.png')} />
+	      <Text>  </Text>
+	      </View>
         { this.state.redirect == true ? redirect_div : (this.state.islogged == true ? logged : notlogged) } 
       </>
       );
@@ -181,7 +186,7 @@ function Separator() {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: 2,
+//      marginTop: 2,
       marginHorizontal: 16,
     },
     title: {
