@@ -119,7 +119,7 @@ class Site_Post extends Component {
             type='font-awesome'
             color='#f50' 
             key={item.id} />}
-            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}} 
             onPress={() => this.props.navigation.navigate('Post_page', {post_id : item.id, all_post: this.state.array_img})}
             title='VIEW NOW' />
              </Card>
