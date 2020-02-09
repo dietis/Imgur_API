@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {  StyleSheet,  View,  SafeAreaView,  Text,  Alert, Image, ScrollView } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage';
+import { Left } from 'native-base';
 
 class UserScreen extends React.Component {
     static navigationOptions = {
@@ -87,6 +88,14 @@ class UserScreen extends React.Component {
           //this.setState({ islogged: true });
         }
 
+
+
+        handleClick(event) {
+          const { param } = e.target.dataset;
+          console.log(param);
+          //do what you want to do with the parameter
+        }
+      
       render() {
         const { error, is_access_token, access_token, json_data, img_data } = this.state;
         if ({json_data} != [] && this.state.is_img_data == true) {
@@ -96,7 +105,7 @@ class UserScreen extends React.Component {
   <ScrollView contentContainerStyle={styles.contentContainer}>
       {img_data.map(item => (
         <>
-            <Card title='HELLO WORLD' key={item.id}
+            <Card title={item.name} key={item.id}
               image={{uri: item.link}}
               imageStyle={{
               }}>
@@ -104,23 +113,35 @@ class UserScreen extends React.Component {
              { item.description }
            </Text>
            <Button key={item.id}
-             icon={<Icon raised
-              name='eject'
-              type='font-awesome'
-              color='#f50' 
-              key={item.id} />}
-             buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-             title='VIEW NOW' />
+            icon={<Icon raised
+            name='eject'
+            type='font-awesome'
+            color='#f50' 
+            key={item.id} />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            
+            onPress={() => this.props.navigation.navigate('Post_page', {post_id : item.id, all_post: img_data})}
+
+            title='VIEW NOW' />
              </Card>
       </>
     ))}
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text></Text>
-          <Button
-            title="Disconnect ?"
+        <View style={styles.fixToText}>
+          <Button title="Disconnect ?"
+            buttonStyle={{borderRadius: 0, marginLeft: 50, marginRight: 0, marginTop:20}}
             onPress={() => this.props.navigation.navigate('Home', {islogged: false, disconnect: true})}
           /> 
+          <Button
+            title="Imgur HomePage"
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 50, marginTop:20}}
+            onPress={() => this.props.navigation.navigate('site_post', {islogged: false, disconnect: true})}
+          /> 
           </View>
+          <Button
+            title="Create a Post ;)"
+            buttonStyle={{marginTop:20}}
+            onPress={() => this.props.navigation.navigate('create_post', {islogged: false, disconnect: true})}
+          /> 
           </ScrollView>
           </>;
       return (
