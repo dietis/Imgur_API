@@ -6,7 +6,8 @@ import { Left } from 'native-base';
 
 class UserScreen extends React.Component {
     static navigationOptions = {
-      title: 'Welcome',
+	title: 'Welcome',
+	header: null
     };
 
     constructor(props) {
@@ -125,7 +126,8 @@ class UserScreen extends React.Component {
             title='VIEW NOW' />
              </Card>
       </>
-    ))}
+      ))}
+	  
         <View style={styles.fixToText}>
           <Button title="Disconnect ?"
             buttonStyle={{borderRadius: 0, marginLeft: 50, marginRight: 0, marginTop:20}}
@@ -133,8 +135,9 @@ class UserScreen extends React.Component {
           /> 
           <Button
             title="Imgur HomePage"
-            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 50, marginTop:20}}
-            onPress={() => this.props.navigation.navigate('site_post', {islogged: false, disconnect: true})}
+          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 50, marginTop:20}}
+	              onPress={() => this.props.navigation.navigate('Site_Post', {json_data : this.state.json_data, access_token: this.state.access_token } )}
+//            onPress={() => this.props.navigation.navigate('Site_Post', {islogged: false, disconnect: true})}
           /> 
           </View>
           <Button
@@ -169,7 +172,7 @@ class UserScreen extends React.Component {
       textAlign: 'center',
       marginVertical: 8,
     },
-    fixToText: {
+      fixToText: {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },

@@ -19,7 +19,8 @@ import AutoHeightImage from 'react-native-auto-height-image';
 
 class Post extends Component {
     static navigationOptions = {
-      title: 'Post',
+	title: 'Post',
+	header: null
     };
 
     constructor(props) {
@@ -58,7 +59,7 @@ class Post extends Component {
       console.log({all_post});
       return (
       <>
-      <Text> debug </Text>
+      <Text> </Text>
       <ScrollView >
       {all_post.map(item => (
          item.id == this.state.post_id ? <>
@@ -85,7 +86,7 @@ class Post extends Component {
  </> : null
     ))}
           </ScrollView>
-            <Text>{this.state.post_id}</Text>
+            <Text></Text>
       </>
       );
     }

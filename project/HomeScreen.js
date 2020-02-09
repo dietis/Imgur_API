@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
+    Easing,
+    Animated,
   StyleSheet,
   Text,
   View,
@@ -16,7 +18,8 @@ import CookieManager from '@react-native-community/cookies';
 
 class HomeScreen extends Component {
     static navigationOptions = {
-      title: 'Homescreen',
+	title: 'Homescreen',
+	header: null
     };
 
     constructor(props) {
@@ -75,54 +78,9 @@ class HomeScreen extends Component {
           //body: testdata,
           redirect: 'follow'
         };
-        //https://api.imgur.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&response_type=token.
-        //Linking.openURL("https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token");
         const url = "https://api.imgur.com/oauth2/authorize?client_id="+ '80f2eef039cf016' +"&response_type=token";
         this.setState({redirect: true});
         this.setState({islogged: false});
-
-        /*var formdata = new FormData();
-        formdata.append("refresh_token", "70f36f1cf24197f436af391a58f27eacd1792249");
-        formdata.append("client_id", "80f2eef039cf016");
-        formdata.append("client_secret", "9b6d23aca6f45266abede590efc5337b02a01da1");
-        formdata.append("grant_type", "refresh_token");
-        var requestOptions = {
-          method: 'POST',
-          body: formdata,
-          redirect: 'follow'
-        };
-        var errorit;*/
-      /*fetch("https://api.imgur.com/oauth2/token", requestOptions)
-        .then(response => response.text())
-        .then(result => {console.log(result); if (result.substring(10, 15) == "error") { this.setState({error:true});}else {this.setState({islogged:true, json_data:JSON.parse(result)})} })
-        .catch(error => { console.log('error', error)});
-        if (this.state.error === true)
-          Alert.alert("Bad creditentiel");
-          Alert.alert("z " + this.state.islogged);
-        if (this.state.islogged === true) {
-          this.props.navigation.navigate('Profile', {email: this.state.email, islogged: this.state.logged, token: this.state.token});
-        /*var myHeaders = new Headers();
-        myHeaders.append("Authorization", "Client-ID 80f2eef039cf016");
-        var formdata = new FormData();
-        var requestOptions = {
-          method: 'GET',
-            headers: myHeaders,
-            body: formdata,
-            redirect: 'follow'
-        };
-        fetch("https://api.imgur.com/3/account/{{username}}", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-        */
-      //}
-        //recup des infos du compte
-        /*function Car(make, model, year) {
-          this.make = make;
-          this.model = model;
-          this.year = year;
-        }
-        var car1 = new Car('Eagle', 'Talon TSi', 1993);*/ // example de création d'objet ~
       }
       if (viewId == "profile") {
         //alert("profile var => " + JSON.stringify(this.state.redirect_json_data));
@@ -132,12 +90,17 @@ class HomeScreen extends Component {
     
 
     render() {
+
+	
       //this.props.navigation.navigate('Profile')
       const {navigate} = this.props.navigation;
       const notlogged = <SafeAreaView style={styles.container}>
-      <Separator />
+	    <Separator />
+
+	    
 	    <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center', marginLeft: -40, marginTop: -200 }}>
-        <Text></Text>
+            <Text></Text>
+	    
             <Button
 	color='#ABBCF5'
           title="Login "
@@ -167,14 +130,15 @@ class HomeScreen extends Component {
       style={{marginTop: 20}} 
       />;
 
-      return (
-	      <>
+	    return (
+		    <>
+		
 	      <View style={{ width: 400, backgroundColor: '#F5E4AB', flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-	      <Image style={{ width: 150, height: 100, marginTop: -180, marginLeft: -150 }} source = {require('./img/logo_epicture.png')} />
+		    <Image style={{ width: 150, height: 100, marginTop: -180, marginLeft: -80 }} source = {require('./img/logo_epicture.png')} />
 	      <Text>  </Text>
 	      </View>
         { this.state.redirect == true ? redirect_div : (this.state.islogged == true ? logged : notlogged) } 
-      </>
+    </>
       );
     }
 }

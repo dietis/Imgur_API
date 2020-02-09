@@ -5,6 +5,8 @@ import UserScreen from './UserScreen';
 import Islogged from './Islogged';
 import The_Post from './Posts';
 import Create_Post from './UploadPost';
+import Site_Post from './SitePost';
+import Accueil from './Accueil';
 
 import * as Permissions from 'expo-permissions';
 import * as SecureStore from 'expo-secure-store';
@@ -18,13 +20,15 @@ const getToken = async () => {
 };
 
 const MainNavigator = createStackNavigator({
-  Home: {screen: HomeScreen},
+    
+    Home: {screen: Accueil},
+    First: {screen: HomeScreen},
   Profile: {screen: UserScreen},
   Logged: {screen: Islogged},
   Post_page: {screen: The_Post},
   Create_post: {screen: Create_Post},
+  Site_Post: {screen: Site_Post},
 });
-
 const Mypages = createAppContainer(MainNavigator);
 
 export default Mypages;

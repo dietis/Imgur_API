@@ -15,7 +15,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 class Loggin extends React.Component {
     static navigationOptions = {
-      title: 'Loggin',
+	title: 'Loggin',
+	header: null
     };
     constructor(props) {
         super(props);

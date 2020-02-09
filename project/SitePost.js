@@ -20,9 +20,9 @@ import AutoHeightImage from 'react-native-auto-height-image';
 import ImagePicker from 'react-native-image-picker';
 import { Button, Icon } from 'react-native-elements'
 
-class Post_upload extends Component {
+class Site_Post extends Component {
     static navigationOptions = {
-	title: 'Post',
+	title: 'Imgur Homepage',
 	header: null
     };
 
@@ -130,7 +130,7 @@ class Post_upload extends Component {
           Alert.alert("Empty file, please select an image or take a picture ");
         }
         else {
-            var myHeaders = new Headers();
+/*            var myHeaders = new Headers();
             myHeaders.append("Authorization", "Client-ID 80f2eef039cf016");
 
             var formData = new FormData();
@@ -148,24 +148,42 @@ class Post_upload extends Component {
                     body: formData,
                     redirect: 'follow'
             };
-        
+  */      
+var myHeaders = new Headers();
+myHeaders.append("Authorization", "Client-ID {{clientId}}");
 
-                var myHeaders = new Headers();
-                Alert.alert("test " + this.state.access_token);
-                myHeaders.append("Authorization", "Bearer "+ this.state.access_token);
-                var formdata = new FormData();
-                formdata.append("image", this.state.fileData);
-                var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: formdata,
-                redirect: 'follow'
-                };
+var formdata = new FormData();
 
-                fetch("https://api.imgur.com/3/image", requestOptions)
-                .then(response => response.text())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error));
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch("https://api.imgur.com/3/gallery/hot/viral/day/1?showViral=true&mature=true&album_previews=true", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+		.catch(error => console.log('error', error));
+
+	    
+            //    var myHeaders = new Headers();
+              //  Alert.alert("test " + this.state.access_token);
+                //myHeaders.append("Authorization", "Bearer "+ this.state.access_token);
+                //var formdata = new FormData();
+                //formdata.append("image", this.state.fileData);
+                //var requestOptions = {
+                //method: 'POST',
+                //headers: myHeaders,
+                //body: formdata,
+                //redirect: 'follow'
+                //};
+
+//	    fetch("https://api.imgur.com/3/gallery/hot/viral/day/{{page}}?showViral=true&mature=true&album_previews=true", requestOptions)
+//                fetch("https://api.imgur.com/3/image", requestOptions)
+  //              .then(response => response.text())
+    //            .then(result => console.log(result))
+      //          .catch(error => console.log('error', error));
         }
     };
 
@@ -231,7 +249,7 @@ class Post_upload extends Component {
       <>
       <Text> </Text>
       <Fragment>
-              <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="dark-content" />
         <SafeAreaView>
           <View style={styles.body}>
             <Text style={{textAlign:'center',fontSize:20,paddingBottom:10}} >Pick Images from Camera & Gallery</Text>
@@ -267,15 +285,7 @@ class Post_upload extends Component {
           buttonStyle={{marginTop: 40, borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,  backgroundColor: '#E4ABF5' }}
             onPress={this.push_img}
             title='Push image ?'
-              />
-
-	      <Button
-	  buttonStyle={{marginTop: 25}}
-          title='Back to profile'
-          color="#E4ABF5"
-onPress={() => this.props.navigation.navigate('Profile')}
-              />
-
+             />
 
             </View>
           </View>
@@ -337,4 +347,4 @@ const styles = StyleSheet.create({
     }
   });
  
-export default Post_upload;
+export default Site_Post;
