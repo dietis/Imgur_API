@@ -19,6 +19,7 @@ import { Container, Header, Content, Card, CardItem, Left, Thumbnail, Text, Body
 import AutoHeightImage from 'react-native-auto-height-image';
 import ImagePicker from 'react-native-image-picker';
 import { Button, Icon } from 'react-native-elements'
+import RadioGroup from 'react-native-radio-buttons-group';
 
 class Site_Post extends Component {
     static navigationOptions = {
@@ -31,263 +32,100 @@ class Site_Post extends Component {
       this.state = {
           posted: false,
           access_token : '',
-          json_data: [],
-          filepath: {
-            data: '',
-            uri: ''
-          },
-          fileData: '',
-          fileUri: ''
+          firstload: true,
+          array_img: [],
+          data: [
+            {
+              label: 'Hot',
+            },
+            {
+              label: 'Top',
+              value: "Top",
+            },
+          ],
         }
     }
 
   componentDidMount() {
     this.setState({ json_data: this.props.navigation.getParam('json_data'), access_token: this.props.navigation.getParam('access_token') });
   }
-  
-  reload = () => 
-  {
-    //RELOAD COMPONENT
-    this.componentDidMount();
-    this.setState({reload: true});
-  };
 
-    onClickListener = (viewId) => {
-    }
+    onPress = data => {this.setState({ data });
+    this.setState({ firstload: false });
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + this.props.navigation.getParam('access_token'));
 
-
-
-
-    chooseImage = () => {
-        let options = {
-          title: 'Select Image',
-          customButtons: [
-            { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-          ],
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-        };
-        ImagePicker.showImagePicker(options, (response) => {
-          //console.log('Response = ', response);
-    
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-            alert(response.customButton);
-          } else {
-            const source = { uri: response.uri };
-    
-            // You can also display the image using data:
-            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-            // alert(JSON.stringify(response));s
-            //console.log('response', JSON.stringify(response));
-            this.setState({
-              filePath: response,
-              fileData: response.data,
-              fileUri: response.uri
-            });
-          }
-        });
-      }
-
-      launchCamera = () => {
-        let options = {
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-        };
-        ImagePicker.launchCamera(options, (response) => {
-          //console.log('Response = ', response);
-    
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-            alert(response.customButton);
-          } else {
-            const source = { uri: response.uri };
-            //console.log('response', JSON.stringify(response));
-            this.setState({
-              filePath: response,
-              fileData: response.data,
-              fileUri: response.uri
-            });
-          }
-        });
-    
-      }
-    
-      push_img = () => { //le click button est ici pour push sur imgur
-        if (this.state.fileUri == '') {
-          Alert.alert("Empty file, please select an image or take a picture ");
-        }
-        else {
-/*            var myHeaders = new Headers();
-            myHeaders.append("Authorization", "Client-ID 80f2eef039cf016");
-
-            var formData = new FormData();
-            formData.append('upload', {
-                      image: this.state.fileData,
-                type: 'base64'
-            });
-        
-            var requestOptions = {
-                    method: 'POST',
-                    headers: {
-                        Authorization: 'Client-ID ' + 'ae785bebe045504',
-                        Accept: 'application/json',
-                      },
-                    body: formData,
-                    redirect: 'follow'
-            };
-  */      
-var myHeaders = new Headers();
-myHeaders.append("Authorization", "Client-ID {{clientId}}");
-
-var formdata = new FormData();
-
-var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  body: formdata,
-  redirect: 'follow'
-};
-
-fetch("https://api.imgur.com/3/gallery/hot/viral/day/1?showViral=true&mature=true&album_previews=true", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-		.catch(error => console.log('error', error));
-
-	    
-            //    var myHeaders = new Headers();
-              //  Alert.alert("test " + this.state.access_token);
-                //myHeaders.append("Authorization", "Bearer "+ this.state.access_token);
-                //var formdata = new FormData();
-                //formdata.append("image", this.state.fileData);
-                //var requestOptions = {
-                //method: 'POST',
-                //headers: myHeaders,
-                //body: formdata,
-                //redirect: 'follow'
-                //};
-
-//	    fetch("https://api.imgur.com/3/gallery/hot/viral/day/{{page}}?showViral=true&mature=true&album_previews=true", requestOptions)
-//                fetch("https://api.imgur.com/3/image", requestOptions)
-  //              .then(response => response.text())
-    //            .then(result => console.log(result))
-      //          .catch(error => console.log('error', error));
-        }
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
     };
 
-      launchImageLibrary = () => {
-        let options = {
-          storageOptions: {
-            skipBackup: true,
-            path: 'images',
-          },
-        };
-        ImagePicker.launchImageLibrary(options, (response) => {
-          //console.log('Response = ', response);
-    
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-            alert(response.customButton);
-          } else {
-            const source = { uri: response.uri };
-            //console.log('response', JSON.stringify(response));
-            this.setState({
-              filePath: response,
-              fileData: response.data,
-              fileUri: response.uri
-            });
-          }
+    var section;
+    if (data == 'Hot') {
+      section = 'hot';
+    } else { section = 'top'}
+    fetch("https://api.imgur.com/3/gallery/"+section+"/viral/day/0?showViral=true&mature=false&album_previews=false", requestOptions)
+      .then(response => response.json())
+      .then(result => {console.log(result); 
+        this.setState({
+          array_img: result.data
         });
-    
-      }
-    
-      renderFileData() {
-        if (this.state.fileData) {
-          return <Image source={{ uri: 'data:image/jpeg;base64,' + this.state.fileData }}
-            style={styles.images}
-          />
-        } else {
-          return <Image source={require('./Duck.png')}
-            style={styles.images}
-          />
-        }
-      }
-    
-      renderFileUri() {
-        if (this.state.fileUri) {
-          return <Image
-            source={{ uri: this.state.fileUri }}
-            style={styles.images}
-          />
-        } else {
-          return <Image
-            source={require('./Duck.png')}
-            style={styles.images}
-          />
-        }
-      }
-
+        })
+      .catch(error => console.log('error', error));
+      console.log("gg");
+    };
 
     render() {
+      if (this.state.firstload == true) {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + this.props.navigation.getParam('access_token'));
+
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+        fetch("https://api.imgur.com/3/gallery/hot/viral/day/0?showViral=true&mature=false&album_previews=false", requestOptions)
+          .then(response => response.json())
+          .then(result => {console.log(result);
+            this.setState({
+              array_img: result.data
+            });
+          })
+          .catch(error => console.log('error', error));
+          this.setState({ firstload : false });
+        }
       return (
       <>
-      <Text> </Text>
       <Fragment>
         <StatusBar barStyle="dark-content" />
         <SafeAreaView>
           <View style={styles.body}>
-            <Text style={{textAlign:'center',fontSize:20,paddingBottom:10}} >Pick Images from Camera & Gallery</Text>
-            <View style={styles.ImageSections}>
-              <View>
-                {this.renderFileData()}
-                <Text  style={{textAlign:'center'}}>Base 64 String</Text>
-              </View>
-              <View>
-                {this.renderFileUri()}
-                <Text style={{textAlign:'center'}}>File Uri</Text>
-              </View>
-            </View>
-
-            <View style={styles.btnParentSection}>
-              <TouchableOpacity onPress={this.chooseImage} style={styles.btnSection}  >
-                <Text style={styles.btnText}>Choose File</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={this.launchCamera} style={styles.btnSection}  >
-                <Text style={styles.btnText}>Directly Launch Camera</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={this.launchImageLibrary} style={styles.btnSection}  >
-                <Text style={styles.btnText}>Directly Launch Image Library</Text>
-              </TouchableOpacity>
-              <Button 
+        <RadioGroup radioButtons={this.state.data} onPress={this.onPress} style={{display: 'flex', width:'auto', marginHorizontal: -32}}/>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+      {this.state.array_img.map(item => (
+        <>
+            <Card title={item.name} key={item.id}
+              image={{url: item.link}}
+              imageStyle={{ height : 40
+              }}>
+             <Text style={{marginBottom: 10}}>
+             { item.description }
+           </Text>
+           <Button key={item.id}
             icon={<Icon raised
-            name='send'
+            name='eject'
             type='font-awesome'
-            color='#ABF5E3' 
-            />}
-          buttonStyle={{marginTop: 40, borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,  backgroundColor: '#E4ABF5' }}
-            onPress={this.push_img}
-            title='Push image ?'
-             />
-
-            </View>
+            color='#f50' 
+            key={item.id} />}
+            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+            onPress={() => this.props.navigation.navigate('Post_page', {post_id : item.id, all_post: this.state.array_img})}
+            title='VIEW NOW' />
+             </Card>
+      </>
+      ))}
+          </ScrollView>
           </View>
         </SafeAreaView>
       </Fragment>
@@ -302,15 +140,11 @@ const styles = StyleSheet.create({
     scrollView: {
       backgroundColor: '#778899',
     },
-  
     body: {
-	marginTop: -50,
       backgroundColor: '#F5E4AB',
-      justifyContent: 'center',
+      justifyContent: "flex-start",
       borderColor: 'black',
-      borderWidth: 1,
-      height: Dimensions.get('screen').height - 20,
-      width: Dimensions.get('screen').width
+      height: Dimensions.get('screen').height,
     },
     ImageSections: {
       display: 'flex',
